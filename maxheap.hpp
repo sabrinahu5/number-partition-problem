@@ -38,12 +38,12 @@ private:
 public:
     MaxHeap() {}
 
-    void insert(int val) {
+    void insert(long val) {
         heap.push_back(val);
         heapifyUp(heap.size() - 1);
     }
 
-    int extractMax() {
+    long extractMax() {
         if (heap.empty()) {
             throw out_of_range("Heap is empty");
         }

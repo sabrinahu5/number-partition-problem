@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <time.h>
 #include <math.h>
@@ -188,10 +189,41 @@ int main(int argc, char* argv[]) {
 
     // command line argument should be in form "./partition flag algorithm inputfile"
     if (argc != 4) {
-        printf("Invalid arguments.");
-        return 1;
+        printf("Usage: ./partition flag algorithm inputfile");
+        return 0;
     }
 
-    test();
+    std::vector<long> testvec;
+    if (atoi(argv[1]) == 0) {
+        ifstream testfile(argv[3]);
+        string line;
+        while (getline(testfile, line)) {   
+            testvec.push_back(stoi(line));
+        }
+    }
+
+
+    if (atoi(argv[2]) == 0) {
+        MaxHeap test;
+        for (int i = 0; i < testvec.size(); i++) {
+            test.insert(testvec[i]);
+        }
+        long n = karmarkarKarp(test);
+        std::cout << n << std::endl;
+    } else if (atoi(argv[2]) == 1) {
+        long n = repeatedRandom(testvec);
+        std::cout << n << std::endl;
+    } else if (atoi(argv[2]) == 2) {
+        long n = hillClimbing(testvec);
+        std::cout << n << std::endl;
+    } else if (atoi(argv[2]) == 3) {
+        long n = simulatedAnnealing(testvec);
+        std::cout << n << std::endl;
+    }
+
+
+    //test();
+
+    
 
 }

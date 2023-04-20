@@ -36,8 +36,7 @@ std::vector<int> generateRandSol(int n) {
 long residue(std::vector<long> nums, std::vector<int> sol, int n) 
 {
     long res = 0;
-    for (int i = 0; i < n; i++) 
-    {
+    for (int i = 0; i < n; i++) {
         res += sol[i] * nums[i];
     }
     return abs(res);
@@ -52,8 +51,7 @@ std::vector<int> generateNeighbor(std::vector<int> sol) {
 
     int r = rand() % n;
 
-	for (int i = 0; i < n; i++) 
-    {
+	for (int i = 0; i < n; i++) {
 		neighbor[i] = sol[i];
 	}
 
@@ -78,6 +76,17 @@ double cooling(int ITER)
     return pow(10, 10) * pow(0.8, ITER / 300);
 }
 
+// generates a random prepartitioning )
+std::vector<int> generatePartition(int n) {
+    
+    std::vector<int> partition(n);
+    for (int i = 0; i < n; i++) 
+    {
+        partition[i] = rand() % n;
+    }
+
+    return;
+}
 
 
 // HEURISTICS
@@ -154,9 +163,8 @@ long simulatedAnnealing(std::vector<long> testvec) {
 
 }
 
-void test() {
+std::vector<long> generateTest(){
 
-    MaxHeap test;
     std::vector<long> testvec;
     srand(time(0));
 
@@ -165,19 +173,36 @@ void test() {
         long range = 1000000000000LL; // set the range [1, 10^12]
         long randNum = rand() % range + 1;
 
-        test.insert(randNum);
         testvec.push_back(randNum);
-
     }
 
-    long n = karmarkarKarp(test);
-    std::cout << "Karmarkar Karp: " << n << std::endl;
-    n = repeatedRandom(testvec);
-    std::cout << "Repeated Random: " << n << std::endl;
-    n = hillClimbing(testvec);
-    std::cout << "Hill Climbing: " << n << std::endl;
-    n = simulatedAnnealing(testvec);
-    std::cout << "Simulated Annealing: " << n << std::endl;
+    return testvec;
+
+}
+
+void test() {
+
+    long kk = 0;
+    long rr = 0;
+    long hc = 0;
+    long sa = 0;
+
+    for (int i = 0; i < 50; i++) {
+        std::vector<long> testvec = generateTest();
+        MaxHeap test;
+        for (int i = 0; i < testvec.size(); i++) {
+            test.insert(testvec[i]);
+        }
+        kk += karmarkarKarp(test);
+        rr += repeatedRandom(testvec);
+        hc += hillClimbing(testvec);
+        sa += simulatedAnnealing(testvec);
+    }
+
+    std::cout << "Karmarkar Karp: " << kk / 50 << std::endl;
+    std::cout << "Repeated Random: " << rr / 50 << std::endl;
+    std::cout << "Hill Climbing: " << hc / 50 << std::endl;
+    std::cout << "Simulated Annealing: " << sa / 50 << std::endl;
 
 
 }
@@ -188,7 +213,7 @@ int main(int argc, char* argv[]) {
     // test 
 
     // command line argument should be in form "./partition flag algorithm inputfile"
-    if (argc != 4) {
+    /*if (argc != 4) {
         printf("Usage: ./partition flag algorithm inputfile");
         return 0;
     }
@@ -219,10 +244,10 @@ int main(int argc, char* argv[]) {
     } else if (atoi(argv[2]) == 3) {
         long n = simulatedAnnealing(testvec);
         std::cout << n << std::endl;
-    }
+    }*/
 
 
-    //test();
+    test();
 
     
 

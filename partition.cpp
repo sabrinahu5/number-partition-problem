@@ -18,6 +18,22 @@ using namespace std;
 
 // HELPER METHODS
 
+// Karmarkar Karp's algorithm
+long karmarkarKarp(std::vector<long> testvec) {
+
+    MaxHeap h;
+    for (int i = 0; i < testvec.size(); i++) {
+        h.insert(testvec[i]);
+    }
+
+    while (h.size() > 1) {
+        long a = h.extractMax();
+        long b = h.extractMax();
+        h.insert(abs(a-b));
+    }
+    return h.extractMax();
+}
+
 // generates a random sequence of 1, -1 as a random solution
 std::vector<int> generateRandSol(int n) {
 
@@ -85,21 +101,49 @@ std::vector<int> generatePartition(int n) {
         partition[i] = rand() % n;
     }
 
-    return;
+    return partition;
+}
+
+// calculates residue but for prepartitioning
+long residue_pre(std::vector<long> nums, std::vector<int> sol, int n) {
+    std::vector<long> modified_sol(n);
+
+    for (int i = 0; i < n; i++) {
+        modified_sol[i] = 0;
+    }
+
+    for (int i = 0; i < n; i++) {
+        modified_sol[sol[i]] += nums[i];
+    }
+
+    return karmarkarKarp(modified_sol);
+}
+
+std::vector<int> neighbor_pre(std::vector<int> sol) {
+
+    int n = sol.size();
+
+    std::vector<int> neighbor(n);
+
+	for (int i = 0; i < n; i++) {
+		neighbor[i] = sol[i];
+	}
+
+    int r = rand() % n;
+
+	int j = neighbor[r];
+	while (j == neighbor[r]) {
+		j = rand() % n;
+	}
+	neighbor[r] = j;
+
+	return neighbor;
+
 }
 
 
 // HEURISTICS
 
-// Karmarkar Karp's algorithm
-long karmarkarKarp(MaxHeap h) {
-    while (h.size() > 1) {
-        long a = h.extractMax();
-        long b = h.extractMax();
-        h.insert(abs(a-b));
-    }
-    return h.extractMax();
-}
 
 // repeated random heuristic
 long repeatedRandom(std::vector<long> testvec) {
@@ -119,6 +163,7 @@ long repeatedRandom(std::vector<long> testvec) {
 
 }
 
+// hill climbing heuristic
 long hillClimbing(std::vector<long> testvec) {
 
     int n = testvec.size();
@@ -136,6 +181,7 @@ long hillClimbing(std::vector<long> testvec) {
 
 }
 
+// simulated annealing heuristic
 long simulatedAnnealing(std::vector<long> testvec) {
 
     int n = testvec.size();
@@ -180,29 +226,46 @@ std::vector<long> generateTest(){
 
 }
 
+// repeated random heuristic w/ pre-partitioning
+long rr_pre(std::vector<long> testvec) {
+    
+    int n = testvec.size();
+
+    std::vector<int> sol = generatePartition(n);
+
+    for (int i = 0; i < 25000; i++) {
+        std::vector<int> sol2 = generateRandSol(n);
+        if (residue_pre(testvec, sol2, n) < residue_pre(testvec, sol, n)) {
+            sol = sol2;
+        }
+    }
+
+    return residue_pre(testvec, sol, n);
+
+}
+
 void test() {
 
     long kk = 0;
     long rr = 0;
     long hc = 0;
     long sa = 0;
+    long rrp = 0;
 
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 10; i++) {
         std::vector<long> testvec = generateTest();
-        MaxHeap test;
-        for (int i = 0; i < testvec.size(); i++) {
-            test.insert(testvec[i]);
-        }
-        kk += karmarkarKarp(test);
+        kk += karmarkarKarp(testvec);
         rr += repeatedRandom(testvec);
         hc += hillClimbing(testvec);
         sa += simulatedAnnealing(testvec);
+        rrp += rr_pre(testvec);
     }
 
-    std::cout << "Karmarkar Karp: " << kk / 50 << std::endl;
-    std::cout << "Repeated Random: " << rr / 50 << std::endl;
-    std::cout << "Hill Climbing: " << hc / 50 << std::endl;
-    std::cout << "Simulated Annealing: " << sa / 50 << std::endl;
+    std::cout << "Karmarkar Karp: " << kk / 10 << std::endl;
+    std::cout << "Repeated Random: " << rr / 10 << std::endl;
+    std::cout << "Hill Climbing: " << hc / 10 << std::endl;
+    std::cout << "Simulated Annealing: " << sa / 10 << std::endl;
+    std::cout << "Repeated Random with Pre-Partitioning: " << rrp / 10 << std::endl;
 
 
 }

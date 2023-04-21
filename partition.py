@@ -1,10 +1,10 @@
 import sys
 import random
 from random import randint
-import time
 import math
 import heapq
 import numpy as np
+import matplotlib.pyplot as plt
 
 MAX_ITER = 25000
 
@@ -161,16 +161,6 @@ def call_algs(nums, alg):
 
 
 def main(args):
-    """
-    N = 5
-    A = [10, 1, 1, 1, 20]
-    S = generate_rand_sol(N)
-    print(S)
-    print(calc_residues(A, S, N))
-    print(RR(A))
-    print(HC(A))
-    print(SA(A))
-    """
 
     if len(args) != 3:
         print("Not enough arguments.")
@@ -225,7 +215,78 @@ def ranking_table(results):
 if __name__ == "__main__":
     main(sys.argv[1:])
 
+    """
+    kk_data = np.array([0]*50)
+    for i in range(50):
+        nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        kkval = KK(nums)
+        kk_data[i] = kkval
+    """
 
+    """
+    rr_data = np.array([0]*50)
+    for i in range(50):
+        nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        rrval = RR(nums)
+        rr_data[i] = rrval
+
+    hc_data = np.array([0]*50)
+    for i in range(50):
+        nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        hcval = HC(nums)
+        hc_data[i] = hcval
+    
+    
+    sa_data = np.array([0]*50)
+    for i in range(50):
+        nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        saval = SA(nums)
+        sa_data[i] = saval
+
+    """
+
+    p_rr_data = np.array([0]*50)
+    for i in range(50):
+        nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        rrval = p_RR(nums)
+        p_rr_data[i] = rrval
+
+    p_hc_data = np.array([0]*50)
+    for i in range(50):
+        nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        hcval = p_HC(nums)
+        p_hc_data[i] = hcval
+    
+    
+    p_sa_data = np.array([0]*50)
+    for i in range(50):
+        nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        saval = p_SA(nums)
+        p_sa_data[i] = saval
+
+    y5 = p_rr_data
+    y6 = p_hc_data
+    y7 = p_sa_data
+
+
+    x = np.arange(1, 51)
+    #y1 = kk_data
+    #y2 = rr_data
+    #y3 = hc_data
+    #y4 = sa_data
+
+    plt.title("Comparison of Residues for KK and Pre-Partitioned Heuristics")
+    plt.xlabel("Instance")
+    plt.ylabel("Residues")
+    #plt.plot(x, y1, label = "Karmarkar Karp")
+    plt.plot(x, y5, label = "Repeated Random (P)")
+    plt.plot(x, y6, label = "Hill Climbing (P)")
+    plt.plot(x, y7, label = "Simulated Annealing (P)")
+    plt.legend()
+    plt.show()
+
+
+    
 
 """
     # Generate 50 random instances of the problem

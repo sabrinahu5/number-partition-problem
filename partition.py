@@ -21,7 +21,7 @@ def calc_residues(nums, sol, n):
     sum = 0
     for i in range(n):
         sum += sol[i] * nums[i]
-    return sum
+    return abs(sum)
 
 def generate_neighbor(sol):
     n = len(sol)
@@ -50,6 +50,7 @@ def RR(nums):
         sol2 = generate_rand_sol(n)
         if calc_residues(nums, sol2, n) < calc_residues(nums, sol, n):
             sol = sol2.copy()
+    #print("RR result:", calc_residues(nums, sol, n))
     return calc_residues(nums, sol, n)
 
 def HC(nums):
@@ -59,6 +60,7 @@ def HC(nums):
         sol2 = generate_neighbor(sol)
         if calc_residues(nums, sol2, n) < calc_residues(nums, sol, n):
             sol = sol2.copy()
+    #print("HC result:", calc_residues(nums, sol, n))
     return calc_residues(nums, sol, n)
 
 def T(iter):
@@ -76,6 +78,7 @@ def SA(nums):
             sol = sol2.copy()
         if calc_residues(nums, sol, n) < calc_residues(nums, sol3, n):
             sol3 = sol.copy()
+    #print("SA result:", calc_residues(nums, sol3, n))
     return calc_residues(nums, sol3, n)
 
 # PRE-PARTITIONING STUFF
@@ -156,12 +159,23 @@ def call_algs(nums, alg):
     elif alg == 13:
         return p_SA(nums)
 
+
 def main(args):
+    """
+    N = 5
+    A = [10, 1, 1, 1, 20]
+    S = generate_rand_sol(N)
+    print(S)
+    print(calc_residues(A, S, N))
+    print(RR(A))
+    print(HC(A))
+    print(SA(A))
+    """
 
     if len(args) != 3:
         print("Not enough arguments.")
         return
-
+    
     nums = []
     try:
         file = open(args[2], 'r')
@@ -187,6 +201,7 @@ def main(args):
             print(p_HC(nums))
         case 13:
             print(p_SA(nums))
+        
 
 """
 def run_algorithms(algorithms, data):
@@ -206,8 +221,12 @@ def ranking_table(results):
             counts[i][alg_rank] += 1
     return counts
 """
+
 if __name__ == "__main__":
     main(sys.argv[1:])
+
+
+
 """
     # Generate 50 random instances of the problem
     num_instances = 1
@@ -241,4 +260,5 @@ if __name__ == "__main__":
         print(f"{algorithm_names[i]}\t\t", end="")
         for count in rank_counts:
             print(f"{count}\t", end="")
-        print()"""
+        print()
+"""

@@ -4,7 +4,7 @@ from random import randint
 import math
 import heapq
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import time
 
 MAX_ITER = 25000

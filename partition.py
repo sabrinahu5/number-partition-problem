@@ -5,6 +5,7 @@ import math
 import heapq
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 MAX_ITER = 25000
 
@@ -137,27 +138,6 @@ def p_SA(nums):
             sol3 = sol.copy()
     return p_calc_residues(nums, sol3, n)
 
-def generate_tf():
-    with open('input.txt', 'w') as f:
-        for i in range(100):
-            f.write(str(randint(0,10**12)))
-            f.write('\n')
-
-def call_algs(nums, alg):
-    if alg == 0:
-        return KK(nums)
-    elif alg == 1:
-        return RR(nums)
-    elif alg == 2:
-        return HC(nums)
-    elif alg == 3:
-        return SA(nums)
-    elif alg == 11:
-        return p_RR(nums)
-    elif alg == 12:
-        return p_HC(nums)
-    elif alg == 13:
-        return p_SA(nums)
 
 
 def main(args):
@@ -193,76 +173,105 @@ def main(args):
             print(p_SA(nums))
         
 
-"""
-def run_algorithms(algorithms, data):
-    results = []
-    for A in data:
-        instance_results = []
-        for alg in algorithms:
-            instance_results.append(call_algs(A, alg))
-        results.append(instance_results)
-    return results
-
-def ranking_table(results):
-    rankings = np.argsort(results, axis=1)
-    counts = np.zeros((len(results[0]), len(results[0])), dtype=int)
-    for rank in rankings:
-        for i, alg_rank in enumerate(rank):
-            counts[i][alg_rank] += 1
-    return counts
-"""
 
 if __name__ == "__main__":
     main(sys.argv[1:])
 
     """
+    kk_avg = 0
     kk_data = np.array([0]*50)
     for i in range(50):
         nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        start = time.perf_counter()
         kkval = KK(nums)
-        kk_data[i] = kkval
-    """
+        end = time.perf_counter()
+        elapsed = end - start
+        kk_avg += elapsed
+        kk_data[i] = elapsed
 
+    print("KK time: ")
+    print(kk_avg / 50)
     """
+    """
+    rr_avg = 0
     rr_data = np.array([0]*50)
     for i in range(50):
         nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        start = time.perf_counter()
         rrval = RR(nums)
-        rr_data[i] = rrval
+        end = time.perf_counter()
+        elapsed = end - start
+        rr_avg += elapsed
+        rr_data[i] = elapsed
+    print("RR time: ")
+    print(rr_avg / 50)
 
+    hc_avg = 0
     hc_data = np.array([0]*50)
     for i in range(50):
         nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        start = time.perf_counter()
         hcval = HC(nums)
-        hc_data[i] = hcval
+        end = time.perf_counter()
+        elapsed = end - start
+        hc_avg += elapsed
+        hc_data[i] = elapsed
+    print("HC time: ")
+    print(hc_avg / 50)
     
-    
+    sa_avg = 0
     sa_data = np.array([0]*50)
     for i in range(50):
         nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        start = time.perf_counter()
         saval = SA(nums)
-        sa_data[i] = saval
-
+        end = time.perf_counter()
+        elapsed = end - start
+        sa_avg += elapsed
+        sa_data[i] = elapsed
+    print("SA time: ")
+    print(sa_avg / 50)
     """
-
+    """
+    p_rr_avg = 0
     p_rr_data = np.array([0]*50)
     for i in range(50):
         nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        start = time.perf_counter()
         rrval = p_RR(nums)
-        p_rr_data[i] = rrval
+        end = time.perf_counter()
+        elapsed = end - start
+        p_rr_avg += elapsed
+        p_rr_data[i] = elapsed
+    print("p_RR time: ")
+    print(p_rr_avg / 50)
 
+    p_hc_avg = 0
     p_hc_data = np.array([0]*50)
     for i in range(50):
         nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        start = time.perf_counter()
         hcval = p_HC(nums)
-        p_hc_data[i] = hcval
+        end = time.perf_counter()
+        elapsed = end - start
+        p_hc_avg += elapsed
+        p_hc_data[i] = elapsed
+    print("p_HC time: ")
+    print(p_hc_avg / 50)
     
-    
+    p_sa_avg = 0
     p_sa_data = np.array([0]*50)
     for i in range(50):
         nums = np.array([randint(0, 10 ** 12) for _ in range(100)])
+        start = time.perf_counter()
         saval = p_SA(nums)
-        p_sa_data[i] = saval
+        end = time.perf_counter()
+        elapsed = end - start
+        p_sa_avg += elapsed
+        p_sa_data[i] = elapsed
+    print("p_SA time: ")
+    print(p_sa_avg / 50)
+    
 
     y5 = p_rr_data
     y6 = p_hc_data
@@ -270,56 +279,20 @@ if __name__ == "__main__":
 
 
     x = np.arange(1, 51)
-    #y1 = kk_data
+    y1 = kk_data
     #y2 = rr_data
     #y3 = hc_data
     #y4 = sa_data
 
-    plt.title("Comparison of Residues for KK and Pre-Partitioned Heuristics")
+    plt.title("Comparison of Times for KK and Other Heuristics (in Sec)")
     plt.xlabel("Instance")
-    plt.ylabel("Residues")
-    #plt.plot(x, y1, label = "Karmarkar Karp")
-    plt.plot(x, y5, label = "Repeated Random (P)")
-    plt.plot(x, y6, label = "Hill Climbing (P)")
-    plt.plot(x, y7, label = "Simulated Annealing (P)")
+    plt.ylabel("Time Elapsed (seconds)")
+    plt.plot(x, y1, label = "Karmarkar Karp")
+    plt.plot(x, y5, label = "Repeated Random")
+    plt.plot(x, y6, label = "Hill Climbing")
+    plt.plot(x, y7, label = "Simulated Annealing")
     plt.legend()
     plt.show()
+    """
 
 
-    
-
-"""
-    # Generate 50 random instances of the problem
-    num_instances = 1
-    data = [np.array([randint(0, 10 ** 12) for _ in range(100)]) for _ in range(num_instances)]
-
-    # List of algorithms
-    algorithms = [0, 1, 2, 3, 11, 12, 13]
-    algorithm_names = ["KK", "RR", "HC", "SA", "p_RR", "p_HC", "p_SA"]
-
-    # Run all algorithms on the same data
-    results = run_algorithms(algorithms, data)
-
-    # Print s_residues table
-    print("s_residues:")
-    print("Instance\t", end="")
-    for alg in algorithm_names:
-        print(f"{alg}\t", end="")
-    print()
-    for i, instance_results in enumerate(results, start=1):
-        print(f"{i}\t\t", end="")
-        for res in instance_results:
-            print(f"{res}\t", end="")
-        print()
-
-    # Print ranking table
-    ranks = ranking_table(results)
-    print("\nRankings:")
-    print("Algorithm\t1st\t2nd\t3rd\t4th\t5th\t6th\t7th")
-
-    for i, rank_counts in enumerate(ranks):
-        print(f"{algorithm_names[i]}\t\t", end="")
-        for count in rank_counts:
-            print(f"{count}\t", end="")
-        print()
-"""
